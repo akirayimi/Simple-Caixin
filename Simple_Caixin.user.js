@@ -140,6 +140,14 @@
 
     // 应用初始样式
     GM_addStyle(`
+        /* 移除微软雅黑字体，使用浏览器默认字体 */
+        * {
+            font-family: revert !important;
+        }
+        [style*="微软雅黑"], [style*="Microsoft YaHei"] {
+            font-family: unset !important;
+        }
+
         /* 格式调整 */
         /* 调整导航栏宽度 */
         .littlenav, .littlenavwarp, .littlenavmore, .Nav {
@@ -258,7 +266,7 @@
         .sitenav, .vioce-box-cons, .icon_key, .subhead, .pip, .function01, .morelink,
         .greenBg, .redBg, .cx-wx-hb-tips, .conri, .f_ri, .fenghui_code, .comment,
         .hot_word_v2, .bottom_tong_ad, .copyright, .navBottom, .multimedia,
-        .share_list, .renewals {
+        .share_list, .renewals, .wifi-tips, .adsame-banner-box {
             display: none !important;
         }
 
