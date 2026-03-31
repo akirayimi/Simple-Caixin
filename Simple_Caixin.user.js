@@ -24,6 +24,14 @@
     // 获取保存的设置
     const hideAiVoice = GM_getValue('hideAiVoice', true);
     const hideComment = GM_getValue('hideComment', false);
+    const darkMode = GM_getValue('darkMode', false);
+
+    // 暗黑模式：页面加载时立即注入，避免闪烁
+    if (darkMode) {
+        GM_addStyle(`
+            html, body { background: #1a1a1a !important; }
+        `);
+    }
 
     // 创建设置按钮
     function createToggleButton() {
@@ -71,8 +79,20 @@
         commentButton.innerHTML = `评论: ${hideComment ? '已隐藏' : '已显示'}`;
         commentButton.style.cssText = aiButton.style.cssText;
 
+        // 暗黑模式按钮
+        const darkButton = document.createElement('button');
+        const _dark = GM_getValue('darkMode', false);
+        darkButton.innerHTML = `暗黑: ${_dark ? '已开启' : '已关闭'}`;
+        darkButton.style.cssText = aiButton.style.cssText;
+        if (_dark) {
+            darkButton.style.background = '#333';
+            darkButton.style.color = '#eee';
+            darkButton.style.borderColor = '#555';
+        }
+
         buttonContainer.appendChild(aiButton);
         buttonContainer.appendChild(commentButton);
+        buttonContainer.appendChild(darkButton);
         container.appendChild(icon);
         container.appendChild(buttonContainer);
 
@@ -89,6 +109,17 @@
             const newValue = !GM_getValue('hideComment', false);
             GM_setValue('hideComment', newValue);
             commentButton.innerHTML = `评论: ${newValue ? '已隐藏' : '已显示'}`;
+            updateStyles();
+        });
+
+        // 暗黑模式按钮点击事件
+        darkButton.addEventListener('click', () => {
+            const newValue = !GM_getValue('darkMode', false);
+            GM_setValue('darkMode', newValue);
+            darkButton.innerHTML = `暗黑: ${newValue ? '已开启' : '已关闭'}`;
+            darkButton.style.background = newValue ? '#333' : '#f0f0f0';
+            darkButton.style.color = newValue ? '#eee' : '';
+            darkButton.style.borderColor = newValue ? '#555' : '#ccc';
             updateStyles();
         });
 
@@ -127,7 +158,8 @@
     function updateStyles() {
         const hideAiVoice = GM_getValue('hideAiVoice', true);
         const hideComment = GM_getValue('hideComment', false);
-        
+        const darkMode = GM_getValue('darkMode', false);
+
         GM_addStyle(`
             .pc-aivoice, .pc-aivoice.trial {
                 display: ${hideAiVoice ? 'none' : 'block'} !important;
@@ -136,6 +168,42 @@
                 display: ${hideComment ? 'none' : 'block'} !important;
             }
         `);
+
+        if (darkMode) {
+            GM_addStyle(`
+                /* 暗黑模式 - 基础背景与文字 */
+                html, body, .comMain, .conlf, #Main_Content_Val,
+                .littlenav, .littlenavwarp, .Nav, .navwarp {
+                    background-color: #1a1a1a !important;
+                    background-image: none !important;
+                    color: #d4d4d4 !important;
+                }
+                /* 正文与标题 */
+                p, span, div, li, td, th, h1, h2, h3, h4, h5, h6, a,
+                .article_content, .sumcont, .article-list {
+                    color: #d4d4d4 !important;
+                    background-color: transparent !important;
+                }
+                /* 链接 */
+                a { color: #7aacda !important; }
+                a:hover { color: #a8c8f0 !important; }
+                /* 图片背景 */
+                .media_pic { background-color: #2a2a2a !important; }
+                /* 导航栏 */
+                .Nav, .littlenav, .littlenavwarp {
+                    border-color: #333 !important;
+                }
+                /* 分隔线与边框 */
+                * { border-color: #333 !important; }
+                /* 输入框 */
+                input, textarea, select {
+                    background-color: #2a2a2a !important;
+                    color: #d4d4d4 !important;
+                }
+                /* 图片轻微降低亮度避免刺眼 */
+                img { filter: brightness(0.85) !important; }
+            `);
+        }
     }
 
     // 应用初始样式
