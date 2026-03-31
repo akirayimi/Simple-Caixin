@@ -184,9 +184,18 @@
                     color: #d4d4d4 !important;
                     background-color: transparent !important;
                 }
-                /* 链接 */
-                a { color: #7aacda !important; }
-                a:hover { color: #a8c8f0 !important; }
+                /* 链接：枚举原页面高权重选择器，确保暗黑模式下可见 */
+                a,
+                .demolNews dt a, .demolNews dd a,
+                h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+                p a, li a, td a, span a, div a,
+                .article_content a, .sumcont a, .conlf a {
+                    color: #7aacda !important;
+                }
+                a:hover,
+                .demolNews dt a:hover, h4 a:hover {
+                    color: #a8c8f0 !important;
+                }
                 /* 图片背景 */
                 .media_pic { background-color: #2a2a2a !important; }
                 /* 导航栏 */
