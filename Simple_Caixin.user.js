@@ -362,7 +362,7 @@
         .sitenav, .vioce-box-cons, .icon_key, .subhead, .pip, .function01, .morelink,
         .greenBg, .redBg, .cx-wx-hb-tips, .conri, .f_ri, .fenghui_code, .comment,
         .hot_word_v2, .bottom_tong_ad, .copyright, .navBottom, .multimedia,
-        .share_list, .renewals, .wifi-tips, .adsame-banner-box {
+        .share_list, .renewals, .wifi-tips, .logo, .WB_FB_show, .adsame-banner-box, #questions_container {
             display: none !important;
         }
 
