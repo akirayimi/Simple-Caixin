@@ -16,6 +16,8 @@
 // @run-at             document-start
 // @license            MPL 2.0
 // @changelog          0.8.20250312 - 调整了文章题图和图注的样式
+// @updateURL          https://github.com/akirayimi/Simple-Caixin/raw/refs/heads/master/Simple_Caixin.user.js
+// @downloadURL        https://github.com/akirayimi/Simple-Caixin/raw/refs/heads/master/Simple_Caixin.user.js
 // ==/UserScript==
 
 (function () {
