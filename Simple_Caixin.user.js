@@ -145,22 +145,7 @@
             imageButton.style.background = newValue ? '#e0e0e0' : '#f0f0f0';
             imageButton.style.color = newValue ? '#555' : '';
             updateStyles();
-        });
-
-        // 滚动监听
-        let scrollTimer;
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimer);
-            scrollTimer = setTimeout(() => {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                if (scrollTop <= 10) {
-                    container.style.transform = 'translateY(0)';
-                    container.style.opacity = '0.3';
-                } else {
-                    container.style.transform = 'translateY(-100px)';
-                    container.style.opacity = '0';
-                }
-            }, 100);
+            applyImageHiding();
         });
 
         // 鼠标悬停效果
@@ -171,8 +156,7 @@
 
         container.addEventListener('mouseleave', () => {
             buttonContainer.style.display = 'none';
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            container.style.opacity = scrollTop <= 10 ? '0.3' : '0';
+            container.style.opacity = '0.3';
         });
 
         document.body.appendChild(container);
@@ -192,11 +176,13 @@
             .pc-comment {
                 display: ${hideComment ? 'none' : 'block'} !important;
             }
-            #the_content > div.media.article_media_pic.ascar > dl > dt > img,
-            #introBG,
-            .articleImageB {
-                display: ${hideImages ? 'none' : ''} !important;
-            }
+            ${hideImages ? `
+                #the_content > div.media.article_media_pic.ascar > dl > dt > img,
+                #introBG,
+                .articleImageB {
+                    display: none !important;
+                }
+            ` : ''}
         `);
 
         if (darkMode) {
@@ -256,6 +242,106 @@
                     color: #2c2010 !important;
                 }
             `);
+        }
+    }
+
+    // 图片目标选择器
+    const IMAGE_SELECTORS = [
+        '#the_content > div.media.article_media_pic.ascar > dl > dt > img',
+        '#introBG',
+        '.articleImageB',
+    ];
+
+    // 图片隐藏/显示（带占位符与悬浮缩略图）
+    function applyImageHiding() {
+        const hide = GM_getValue('hideImages', false);
+
+        if (hide) {
+            IMAGE_SELECTORS.forEach(selector => {
+                document.querySelectorAll(selector).forEach(el => {
+                    if (el.dataset.cxHidden) return; // 已处理过，跳过
+
+                    // 取图片 src（img 标签 or 背景图）
+                    let imgSrc = '';
+                    if (el.tagName === 'IMG') {
+                        imgSrc = el.src || el.dataset.src || '';
+                    } else {
+                        const bg = window.getComputedStyle(el).backgroundImage;
+                        const m = bg.match(/url\(["']?(.*?)["']?\)/);
+                        imgSrc = m ? m[1] : '';
+                    }
+
+                    // 记录并隐藏原元素
+                    el.dataset.cxHidden = '1';
+                    el.dataset.cxOrigDisplay = el.style.display;
+                    el.style.setProperty('display', 'none', 'important');
+
+                    // 创建 [图片] 占位符
+                    const ph = document.createElement('span');
+                    ph.className = 'cx-img-ph';
+                    ph.textContent = '[图片]';
+                    ph.style.cssText = [
+                        'display:inline-flex',
+                        'align-items:center',
+                        'justify-content:center',
+                        'padding:3px 10px',
+                        'background:#f5f5f5',
+                        'border:1px dashed #bbb',
+                        'border-radius:4px',
+                        'color:#aaa',
+                        'font-size:13px',
+                        'user-select:none',
+                        'vertical-align:middle',
+                        imgSrc ? 'cursor:pointer' : 'cursor:default',
+                    ].join(';');
+
+                    // 悬浮缩略图
+                    if (imgSrc) {
+                        let thumb = null;
+                        ph.addEventListener('mouseenter', () => {
+                            thumb = document.createElement('div');
+                            thumb.style.cssText = [
+                                'position:fixed',
+                                'z-index:999999',
+                                'background:#fff',
+                                'border:1px solid #ddd',
+                                'border-radius:6px',
+                                'padding:5px',
+                                'box-shadow:0 6px 24px rgba(0,0,0,0.18)',
+                                'pointer-events:none',
+                                'opacity:0',
+                                'transition:opacity 0.15s',
+                            ].join(';');
+                            const tImg = document.createElement('img');
+                            tImg.src = imgSrc;
+                            tImg.style.cssText = 'max-width:240px;max-height:180px;display:block;border-radius:3px';
+                            thumb.appendChild(tImg);
+                            document.body.appendChild(thumb);
+
+                            const r = ph.getBoundingClientRect();
+                            thumb.style.left = Math.min(r.left, window.innerWidth - 260) + 'px';
+                            thumb.style.top  = (r.bottom + 8) + 'px';
+                            requestAnimationFrame(() => { thumb.style.opacity = '1'; });
+                        });
+                        ph.addEventListener('mouseleave', () => {
+                            if (thumb) { thumb.remove(); thumb = null; }
+                        });
+                    }
+
+                    el.insertAdjacentElement('afterend', ph);
+                });
+            });
+        } else {
+            // 移除所有占位符
+            document.querySelectorAll('.cx-img-ph').forEach(ph => ph.remove());
+            // 还原原图
+            document.querySelectorAll('[data-cx-hidden]').forEach(el => {
+                const orig = el.dataset.cxOrigDisplay;
+                el.style.removeProperty('display');
+                if (orig) el.style.display = orig;
+                delete el.dataset.cxHidden;
+                delete el.dataset.cxOrigDisplay;
+            });
         }
     }
 
@@ -408,10 +494,23 @@
     // 应用语音相关样式
     updateStyles();
 
-    // 等待 DOM 加载完成后添加按钮
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', createToggleButton);
-    } else {
+    // 等待 DOM 加载完成后添加按钮并应用图片隐藏
+    function onDOMReady() {
         createToggleButton();
+        applyImageHiding();
+
+        // 监听 DOM 变化，处理动态加载的图片
+        const observer = new MutationObserver(() => {
+            applyImageHiding();
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', onDOMReady);
+    } else {
+        onDOMReady();
     }
 })();
