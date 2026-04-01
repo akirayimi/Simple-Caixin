@@ -367,14 +367,6 @@
             }
         }
 
-        /* 划词工具条背景（亮色模式） */
-        .select-text-menu {
-            background-color: #ffffff !important;
-            border: 1px solid #e0e0e0 !important;
-            border-radius: 6px !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-            padding: 2px 4px !important;
-        }
 
         /* 语音播报工具条（亮色模式） */
         .cx-audio-control {
@@ -387,7 +379,7 @@
         .sitenav, .vioce-box-cons, .icon_key, .subhead, .pip, .function01, .morelink,
         .greenBg, .redBg, .cx-wx-hb-tips, .conri, .f_ri, .fenghui_code, .comment,
         .hot_word_v2, .bottom_tong_ad, .copyright, .navBottom, .multimedia,
-        .share_list, .renewals, .wifi-tips, .logo, .WB_FB_show, .adsame-banner-box, #questions_container {
+        .share_list, .renewals, .wifi-tips, .logo, .select-text-menu, .WB_FB_show, .adsame-banner-box, #questions_container {
             display: none !important;
         }
 
