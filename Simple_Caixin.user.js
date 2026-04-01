@@ -26,10 +26,10 @@
     const hideComment = GM_getValue('hideComment', false);
     const darkMode = GM_getValue('darkMode', false);
 
-    // 暗黑模式：页面加载时立即注入，避免闪烁
+    // 护眼模式：页面加载时立即注入，避免闪烁
     if (darkMode) {
         GM_addStyle(`
-            html, body { background: #1a1a1a !important; }
+            html, body { background: #f5f0e6 !important; }
         `);
     }
 
@@ -79,15 +79,15 @@
         commentButton.innerHTML = `评论: ${hideComment ? '已隐藏' : '已显示'}`;
         commentButton.style.cssText = aiButton.style.cssText;
 
-        // 暗黑模式按钮
+        // 护眼模式按钮
         const darkButton = document.createElement('button');
         const _dark = GM_getValue('darkMode', false);
-        darkButton.innerHTML = `暗黑: ${_dark ? '已开启' : '已关闭'}`;
+        darkButton.innerHTML = `护眼: ${_dark ? '已开启' : '已关闭'}`;
         darkButton.style.cssText = aiButton.style.cssText;
         if (_dark) {
-            darkButton.style.background = '#333';
-            darkButton.style.color = '#eee';
-            darkButton.style.borderColor = '#555';
+            darkButton.style.background = '#e8dfc8';
+            darkButton.style.color = '#4a3c28';
+            darkButton.style.borderColor = '#c8b896';
         }
 
         buttonContainer.appendChild(aiButton);
@@ -112,14 +112,14 @@
             updateStyles();
         });
 
-        // 暗黑模式按钮点击事件
+        // 护眼模式按钮点击事件
         darkButton.addEventListener('click', () => {
             const newValue = !GM_getValue('darkMode', false);
             GM_setValue('darkMode', newValue);
-            darkButton.innerHTML = `暗黑: ${newValue ? '已开启' : '已关闭'}`;
-            darkButton.style.background = newValue ? '#333' : '#f0f0f0';
-            darkButton.style.color = newValue ? '#eee' : '';
-            darkButton.style.borderColor = newValue ? '#555' : '#ccc';
+            darkButton.innerHTML = `护眼: ${newValue ? '已开启' : '已关闭'}`;
+            darkButton.style.background = newValue ? '#e8dfc8' : '#f0f0f0';
+            darkButton.style.color = newValue ? '#4a3c28' : '';
+            darkButton.style.borderColor = newValue ? '#c8b896' : '#ccc';
             updateStyles();
         });
 
@@ -171,57 +171,55 @@
 
         if (darkMode) {
             GM_addStyle(`
-                /* 暗黑模式 - 基础背景与文字 */
+                /* 护眼模式 - 基础背景与文字（牛皮纸暖色系） */
                 html, body, .comMain, .conlf, #Main_Content_Val,
                 .littlenav, .littlenavwarp, .Nav, .navwarp {
-                    background-color: #1a1a1a !important;
+                    background-color: #f5f0e6 !important;
                     background-image: none !important;
-                    color: #d4d4d4 !important;
+                    color: #2c2c2c !important;
                 }
                 /* 正文与标题 */
                 p, span, div, li, td, th, h1, h2, h3, h4, h5, h6, a,
                 .article_content, .sumcont, .article-list {
-                    color: #d4d4d4 !important;
+                    color: #2c2c2c !important;
                     background-color: transparent !important;
                 }
-                /* 链接：枚举原页面高权重选择器，确保暗黑模式下可见 */
+                /* 链接：使用温暖棕色，与背景协调 */
                 a,
                 .demolNews dt a, .demolNews dd a,
                 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
                 p a, li a, td a, span a, div a,
                 .article_content a, .sumcont a, .conlf a {
-                    color: #7aacda !important;
+                    color: #7a6a4e !important;
                 }
                 a:hover,
                 .demolNews dt a:hover, h4 a:hover {
-                    color: #a8c8f0 !important;
+                    color: #5a4a32 !important;
                 }
                 /* 图片背景 */
-                .media_pic { background-color: #2a2a2a !important; }
+                .media_pic { background-color: #ede8da !important; }
                 /* 导航栏 */
                 .Nav, .littlenav, .littlenavwarp {
-                    border-color: #333 !important;
+                    border-color: #d4c9b0 !important;
                 }
                 /* 分隔线与边框 */
-                * { border-color: #333 !important; }
+                * { border-color: #d4c9b0 !important; }
                 /* 输入框 */
                 input, textarea, select {
-                    background-color: #2a2a2a !important;
-                    color: #d4d4d4 !important;
+                    background-color: #ede8da !important;
+                    color: #2c2c2c !important;
                 }
-                /* 图片轻微降低亮度避免刺眼 */
-                img { filter: brightness(0.85) !important; }
-                /* 划词工具条背景（暗黑模式） */
+                /* 划词工具条背景（护眼模式） */
                 .select-text-menu {
-                    background-color: #2c2c2c !important;
-                    border-color: #444 !important;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+                    background-color: #ede8da !important;
+                    border-color: #c8b896 !important;
+                    box-shadow: 0 2px 8px rgba(100, 80, 40, 0.15) !important;
                 }
                 .select-text-menu .select-text-menu_item {
-                    color: #c8c8c8 !important;
+                    color: #4a3c28 !important;
                 }
                 .select-text-menu .select-text-menu_item:hover {
-                    color: #ffffff !important;
+                    color: #2c2010 !important;
                 }
             `);
         }
