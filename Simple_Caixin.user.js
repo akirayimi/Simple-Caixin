@@ -211,18 +211,6 @@
                     background-color: #ede8da !important;
                     color: #2c2c2c !important;
                 }
-                /* 划词工具条背景（护眼模式） */
-                .select-text-menu {
-                    background-color: #ede8da !important;
-                    border-color: #c8b896 !important;
-                    box-shadow: 0 2px 8px rgba(100, 80, 40, 0.15) !important;
-                }
-                .select-text-menu .select-text-menu_item {
-                    color: #4a3c28 !important;
-                }
-                .select-text-menu .select-text-menu_item:hover {
-                    color: #2c2010 !important;
-                }
                 /* 语音播报工具条（护眼模式） */
                 .cx-audio-control {
                     background-color: #ede8da !important;
