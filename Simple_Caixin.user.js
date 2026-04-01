@@ -211,6 +211,18 @@
                 }
                 /* 图片轻微降低亮度避免刺眼 */
                 img { filter: brightness(0.85) !important; }
+                /* 划词工具条背景（暗黑模式） */
+                .select-text-menu {
+                    background-color: #2c2c2c !important;
+                    border-color: #444 !important;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+                }
+                .select-text-menu .select-text-menu_item {
+                    color: #c8c8c8 !important;
+                }
+                .select-text-menu .select-text-menu_item:hover {
+                    color: #ffffff !important;
+                }
             `);
         }
     }
@@ -337,6 +349,15 @@
             .littlenavwarp > .searchbox {
                 display: none; /* 隐藏搜索框 */
             }
+        }
+
+        /* 划词工具条背景（亮色模式） */
+        .select-text-menu {
+            background-color: #ffffff !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 6px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+            padding: 2px 4px !important;
         }
 
         /* 隐藏不需要的元素 */
