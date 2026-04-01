@@ -27,6 +27,7 @@
     const hideAiVoice = GM_getValue('hideAiVoice', true);
     const hideComment = GM_getValue('hideComment', false);
     const darkMode = GM_getValue('darkMode', false);
+    const hideImages = GM_getValue('hideImages', false);
 
     // 护眼模式：页面加载时立即注入，避免闪烁
     if (darkMode) {
@@ -92,9 +93,20 @@
             darkButton.style.borderColor = '#c8b896';
         }
 
+        // 图片按钮
+        const imageButton = document.createElement('button');
+        const _hideImages = GM_getValue('hideImages', false);
+        imageButton.innerHTML = `图片: ${_hideImages ? '已隐藏' : '已显示'}`;
+        imageButton.style.cssText = aiButton.style.cssText;
+        if (_hideImages) {
+            imageButton.style.background = '#e0e0e0';
+            imageButton.style.color = '#555';
+        }
+
         buttonContainer.appendChild(aiButton);
         buttonContainer.appendChild(commentButton);
         buttonContainer.appendChild(darkButton);
+        buttonContainer.appendChild(imageButton);
         container.appendChild(icon);
         container.appendChild(buttonContainer);
 
@@ -122,6 +134,16 @@
             darkButton.style.background = newValue ? '#e8dfc8' : '#f0f0f0';
             darkButton.style.color = newValue ? '#4a3c28' : '';
             darkButton.style.borderColor = newValue ? '#c8b896' : '#ccc';
+            updateStyles();
+        });
+
+        // 图片按钮点击事件
+        imageButton.addEventListener('click', () => {
+            const newValue = !GM_getValue('hideImages', false);
+            GM_setValue('hideImages', newValue);
+            imageButton.innerHTML = `图片: ${newValue ? '已隐藏' : '已显示'}`;
+            imageButton.style.background = newValue ? '#e0e0e0' : '#f0f0f0';
+            imageButton.style.color = newValue ? '#555' : '';
             updateStyles();
         });
 
@@ -161,6 +183,7 @@
         const hideAiVoice = GM_getValue('hideAiVoice', true);
         const hideComment = GM_getValue('hideComment', false);
         const darkMode = GM_getValue('darkMode', false);
+        const hideImages = GM_getValue('hideImages', false);
 
         GM_addStyle(`
             .pc-aivoice, .pc-aivoice.trial {
@@ -168,6 +191,11 @@
             }
             .pc-comment {
                 display: ${hideComment ? 'none' : 'block'} !important;
+            }
+            #the_content > div.media.article_media_pic.ascar > dl > dt > img,
+            #introBG,
+            .articleImageB {
+                display: ${hideImages ? 'none' : ''} !important;
             }
         `);
 
